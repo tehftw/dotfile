@@ -9,9 +9,10 @@
 
 
 " reddit said that 'set nocompatible' is unneeded
-
+" dasdsad__dsadsad_dsad
 " Vundle config: has to be at the start
 " {
+
 
 filetype off " required by Vundle
         " set the runtime path to include Vundle and initialize
@@ -20,9 +21,11 @@ filetype off " required by Vundle
         "alternatively, pass a path where Vundle should install plugins
         "call vundle#begin('~/some/path/here')
 
+		Plugin 'file://home/teh/.vim/vimorg-scripts/slimv'
         " let Vundle manage Vundle, required
         Plugin 'VundleVim/Vundle.vim'
-            
+	
+		Plugin 'bkad/CamelCaseMotion'
         " The following are examples of different formats supported.
         " Keep Plugin commands between vundle#begin/end.
         " plugin on GitHub repo
@@ -34,7 +37,7 @@ filetype off " required by Vundle
         " git repos on your local machine (i.e. when working on your own plugin)
         " Plugin 'file:///home/gmarik/path/to/plugin'
         
-        " The sparkup vim script is in a subdirectory of this repo called vim.
+		" The sparkup vim script is in a subdirectory of this repo called vim.
         " Pass the path to set the runtimepath properly.
         Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
         " Install L9 and avoid a Naming conflict if you've already installed a
@@ -42,12 +45,19 @@ filetype off " required by Vundle
         " Plugin 'ascenator/L9', {'name': 'newL9'}
    
         " Markdown
-        "Plugin 'godlygeek/tabular'
-        "Plugin 'plasticboy/vim-markdown'
+        Plugin 'godlygeek/tabular'
+        Plugin 'plasticboy/vim-markdown'
 
         " scrooloose/NerdTree
         Plugin 'scrooloose/nerdTree'
 
+
+		" vlime - for lisp
+		Plugin 'l04m33/vlime', {'rtp': 'vim/'} 
+		
+		
+		
+		Plugin 'majutsushi/tagbar'
         "Disabling because shitty autocomplete pisses me off
         " Plugin 'justmao945/vim-clang'
 
@@ -71,7 +81,19 @@ filetype off " required by Vundle
         " plugin: simply cargo bindings
         Plugin 'timonv/vim-cargo'
 
+
+		" Superman - for better man pages
+		Plugin 'jez/vim-superman'
+
+		
+
+		" REPL
+		Plugin 'https://gitlab.com/HiPhish/repl.nvim/'
         
+
+		" gdb :
+		Plugin 'https://github.com/sakhnik/nvim-gdb'
+		Plugin 'https://github.com/vim-scripts/Conque-GDB'
 
         call vundle#end()            " required
         filetype plugin indent on    " required
@@ -88,6 +110,11 @@ filetype off " required by Vundle
         " Put your non-Plugin stuff after this line
 " }
 
+
+" { CamelCaseMotion
+	map <silent> <C-Right> <Plug>CamelCaseMotion_w
+	map <silent> <C-Left> <Plug>CamelCaseMotion_b
+" }
 
 " Clipboard {
     let g:clipboard = {
@@ -114,7 +141,6 @@ filetype off " required by Vundle
         " {not needed in nvim} set term=$TERM   " make arrow and other keys work
         set mouse=a      " enable mouse in all modes
         set wildmenu     " nice menu with suggestions for command arguments
-        set number " relative number for easier usage
     " }
 " }
 
@@ -135,10 +161,15 @@ set statusline=%m%r%h%w%L[%{&ff}]%y[%p%%][%l,%v]%F
 "                +-- full path to file in the buffer
 " }
 
-" load current scheme file and eval (main)
-command Scm :!scheme --load % --eval \(main\)
-" run make-sprawko command in current dir
-command Ms :!./make-sprawko.sh
+
+" {
+"set listchars=tab:--,trail:.,eol:¬,extends:>,precedes:<
+set listchars=tab:»-,trail:·,extends:»,precedes:«
+set list
+" }
+
+
+
 
 
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
@@ -162,55 +193,19 @@ function! s:RunShellCommand(cmdline)
 endfunction
 
 " General {
-    colorscheme railscasts
-    syntax on " syntax highlighting
-    filetype on " use the type of file
-    set ruler " show linecount always
-    set hlsearch " highlights after searching
-    set title " display titre of file
-    set ignorecase " case insesitive search by default
-    " set cursorline " I think it shows the line cursor is on
+	set number
+	colorscheme railscasts
+	syntax on " syntax highlighting
+	filetype on " use the type of file
+	set ruler " show linecount always
+	set hlsearch " highlights after searching
+	set title " display titre of file
+	set ignorecase " case insesitive search by default
+	" set cursorline " I think it shows the line cursor is on
 " }
 
 
 
-" RemapKeys {
-    " remap colon and semicolon for easier use
-    " nnoremap: Normal
-    nnoremap ; :
-   
-
-    " <j> and <k> to move both cursor and screen
-    " noremap: Normal, Visual, Select, Operator-pending
-    " NOTE: not stable - mostly when pressing <Down>, 
-    " it tends to be very jumpy and move the cursor all around
-    " Edit: Now it's stable. Probably too many spaces at the end
-    noremap <Down> <C-e>j
-    noremap <Up> <C-y>k
-
-    " scroll with <ctrl>+<Up>/<ctrl + down>
-    noremap <C-Down> <C-e>
-    noremap <C-Up> <C-y>
-
-    " makes dot "." work with visually selected lines by default
-    " only in visual mode
-    xnoremap . :norm.<CR> 
-
-        " When F5 is pressed, a numbered list of file names is printed, and the user needs to type a single number based on the 'menu' and press Enter. The 'menu' disappears after choosing the number so it appears only when you need it <-- Happily infoanarchised from vim-wiki
-        nnoremap <F5> :buffers<CR>:buffer<Space> 
-    
-
-
-    " move to prev tab with <gb> <ctrl+tab>
-    " noremap  <g><b> :tabprevious<CR>
-    " inoremap <g><b> :tabprevious<CR>
-    " cnoremap <g><b> :tabprevious<CR>
-    "    noremap <C-S-Tab> :<C-U>tabNext<CR>
-    "    inoremap <C-S-Tab> <C-\><C-N>:tabNext<CR>
-    "    cnoremap <C-S-Tab> <C-U>:tabNext<CR>
-
-
-" }
                 
 
 " TabKey, formatting {
@@ -232,6 +227,62 @@ endfunction
     " }
 " }
 
+" RemapKeys {
+	nmap <F8> :TagbarToggle<CR>
+    " remap colon and semicolon for easier use
+    " nnoremap: Normal
+    nnoremap ; :
+	
+	" swap '(' with '['   --- no longer needed because I changed keyboard
+	" layout
+	"noremap! ( [
+	"noremap! ) ]
+	"noremap! [ (
+	"noremap! ] )
+	"noremap ( [
+	"noremap ) ]
+	"noremap [ (
+	"noremap ] )
+	"tnoremap ( [
+	"tnoremap ) ]
+	"tnoremap [ (
+	"tnoremap ] )
+
+    " <j> and <k> to move both cursor and screen
+    " noremap: Normal, Visual, Select, Operator-pending
+    " NOTE: not stable - mostly when pressing <Down>, 
+    " it tends to be very jumpy and move the cursor all around
+    " Edit: Now it's stable. Probably too many spaces at the end
+    "noremap <Down> <C-e>j
+    "noremap <Up> <C-y>k
+
+    " scroll with <ctrl>+<Up>/<ctrl + down>
+    noremap <C-Down> <C-e>
+    noremap <C-Up> <C-y>
+
+    " makes dot "." work with visually selected lines by default
+    " only in visual mode
+    xnoremap . :norm.<CR> 
+
+
+	" Go back one tab
+	noremap gb gT
+
+    " When F5 is pressed, a numbered list of file names is printed, and the user needs to type a single number based on the 'menu' and press Enter. The 'menu' disappears after choosing the number so it appears only when you need it <-- Happily infoanarchised from vim-wiki
+    nnoremap <F5> :buffers<CR>:buffer<Space>
+    nnoremap <F6> :buffers<CR>:<Space>
+
+
+    " move to prev tab with <gb> <ctrl+tab>
+    " noremap  <g><b> :tabprevious<CR>
+    " inoremap <g><b> :tabprevious<CR>
+    " cnoremap <g><b> :tabprevious<CR>
+    "    noremap <C-S-Tab> :<C-U>tabNext<CR>
+    "    inoremap <C-S-Tab> <C-\><C-N>:tabNext<CR>
+    "    cnoremap <C-S-Tab> <C-U>:tabNext<CR>
+
+
+" }
 
 
 " SYNTASTIC {
